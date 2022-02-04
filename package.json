@@ -1,0 +1,32 @@
+{
+  "name": "tivandb",
+  "version": "1.0.0",
+  "description": "NODE API, MYSQL, Heroku",
+  "main": "server.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AuroraE26/TivanDB.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mysql",
+    "restapi"
+  ],
+  "author": "Aurora Escalera",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AuroraE26/TivanDB/issues"
+  },
+  "homepage": "https://github.com/AuroraE26/TivanDB#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "mysql": "^2.18.1"
+  }
+}
