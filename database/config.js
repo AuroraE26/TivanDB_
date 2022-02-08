@@ -4,10 +4,10 @@ require("dotenv").config();
 
 //Crear la conexion
 const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DB
+    host: process.env.TIVAN_RDS_HOST,
+    user: process.env.TIVAN_RDS_USER,
+    password: process.env.TIVAN_RDS_PASSWORD,
+    database: process.env.TIVAN_RDS_DB
 });
 
 //Conectar
