@@ -115,4 +115,4 @@ exports.delete = (req, res) => {
           }
         } else res.send({ message: `Product was deleted successfully!` });
       });
-};
+}};
