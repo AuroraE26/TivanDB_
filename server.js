@@ -9,8 +9,8 @@ app.use(cors());
 app.use(express.json());
 app.use('/products', routes);
 
-const PORT = process.env.TIVAN_RDS_PORT;
-app.listen(TIVAN_RDS_PORT, ()=>{
-    console.log(`run serven in port ${TIVAN_RDS_PORT}`);
+const PORT = process.env.TIVAN_API_PORT;
+app.listen(PORT, ()=>{
+    console.log(`run serven in port ${PORT}`);
 });
 
