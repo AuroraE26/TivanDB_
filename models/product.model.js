@@ -63,8 +63,8 @@ Product.getAll = (result) => {
 
 Product.updateById = (id, product, result) => {
   sql.query(
-    "UPDATE productos SET no_comun = ?, no_clave = ?, nu_cantMin = ?, nu_precio = ?, no_comun = ? WHERE id = ?",
-    [product.no_comun, product.no_clave, product.nu_cantMin, product.nu_precio, product.no_comun, id],
+    "UPDATE productos SET no_comun = ?, no_clave = ?, nu_cantidad = ?, nu_precio = ?, nu_cantMin = ?, tx_description = ?, nu_codigoBarras = ?, fl_favorito = ?, fl_delete = ?, no_user_creacion = ?, fe_creacion = ?, fe_modificacion = ? WHERE id = ?",
+    [product.no_comun, product.no_clave, product.nu_cantidad, product.nu_precio, product.nu_cantMin, product.tx_description, product.nu_codigoBarras, product.fl_favorito, product.fl_delete, product.no_user_creacion, product.fe_modificacion, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -78,7 +78,7 @@ Product.updateById = (id, product, result) => {
         return;
       }
 
-      console.log("updated product: ", { id: id, ...product });
+      console.log("Se actualizó el producto: ", { id: id, ...product });
       result(null, { id: id, ...product });
     }
   );
