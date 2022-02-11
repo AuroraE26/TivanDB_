@@ -7,7 +7,7 @@ const routes = require("./routes/product.routes");
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/api/productos/', routes);
+app.use('/products', routes);
 
 const PORT = process.env.TIVAN_API_PORT;
 app.listen(PORT, ()=>{

@@ -1,11 +1,11 @@
 
-const productos = require("../controller/product.controller.js");
+const products = require("../controller/product.controller.js");
 var router = require("express").Router();
 
-    router.post("/", productos.create);
-    router.get("/", productos.findAll);
-    router.get("/:id", productos.findOne);
-    router.put("/:id", productos.update);
-    router.delete("/:id", productos.delete);
+    router.post("/", products.create);
+    router.get("/", products.findAll);
+    router.get("/:id", products.findOne);
+    router.put("/:id", products.update);
+    router.delete("/:id", products.delete);
   
   module.exports =router;

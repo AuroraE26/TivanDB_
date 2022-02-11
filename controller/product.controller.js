@@ -1,4 +1,4 @@
-const Producto = require("../models/product.model.js");
+const Product = require("../models/product.model.js");
 
 // Create and Save a new Product
 exports.create = (req, res) => {
@@ -10,7 +10,7 @@ exports.create = (req, res) => {
   }
 
   // Create a Product
-  const producto = new Producto({
+  const product = new Product({
     no_comun: req.body.no_comun,
     no_clave: req.body.no_clave,
     nu_cantidad: req.body.nu_cantidad,
@@ -26,7 +26,7 @@ exports.create = (req, res) => {
   });
 
   // Save Product in the database
-  Producto.create(producto, (err, data) => {
+  Product.create(product, (err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -38,23 +38,20 @@ exports.create = (req, res) => {
 
 // Retrieve all Products from the database.
 exports.findAll = (req,res) => {
-  Producto.getAll ((err, data) => {
+  Product.getAll ((err, data) => {
     if (err){
       res.status(500).send({
-        code:500,
-        name_code: "Internal Server Error",
-        mensaje:
-          err.mensaje || "No se obtuvieron los productos."
-      })
-    } else {
-      res.status(200).send(data);
-    };
-  });
+        message:
+          err.message || "Some error occurred while retrieving products."
+      })}
+    else res.send(data);
+    });
+  };
   
 
 // Find a single Product with a id
 exports.findOne = (req, res) => {
-    Producto.findById(req.params.id, (err, data) => {
+    Product.findById(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
@@ -81,9 +78,9 @@ exports.update = (req, res) => {
 
   console.log(req.body);
 
-  Producto.updateById(
+  Product.updateById(
     req.params.id,
-    new Producto(req.body),
+    new Product(req.body),
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
@@ -102,7 +99,7 @@ exports.update = (req, res) => {
 
 // Delete a Product with the specified id in the request
 exports.delete = (req, res) => {
-    Producto.remove(req.params.id, (err, data) => {
+    Product.remove(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
@@ -115,4 +112,4 @@ exports.delete = (req, res) => {
           }
         } else res.send({ message: `Product was deleted successfully!` });
       });
-}};
+};
