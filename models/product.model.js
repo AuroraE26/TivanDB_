@@ -1,18 +1,18 @@
 const sql = require("../database/config");
 
-const Producto = function(producto) {
-  this.no_comun = producto.no_comun;
-  this.no_clave = producto.no_clave;
-  this.nu_cantidad = producto.nu_cantidad;
-  this.nu_precio = producto.nu_precio;
-  this.nu_cantMin = producto.nu_cantMin;
-  this.tx_description = producto.tx_description;
-  this.nu_codigoBarras = producto.nu_codigoBarras;
-  this.fl_favorito = producto.fl_favorito;
-  this.fl_delete = producto.fl_delete;
-  this.no_user_creacion = producto.no_user_creacion;
-  this.fe_creacion = producto.fe_creacion;
-  this.fe_modificacion = producto.fe_modificacion;
+const Producto = function (producto) {
+  this.comun = producto.comun;
+  this.clave = producto.clave;
+  this.cantidad = producto.cantidad;
+  this.precio = producto.precio;
+  this.cantidadMinima = producto.cantidadMinima;
+  this.descripcion = producto.descripcion;
+  this.codigoBarras = producto.codigoBarras;
+  this.favorito = producto.favorito;
+  this.eliminar = producto.eliminar;
+  this.userCreacion = producto.userCreacion;
+  this.fechaCreacion = producto.fechaCreacion;
+  this.fechaModificacion = producto.fechaModificacion;
 };
 
 Producto.create = (newProduct, result) => {
@@ -29,7 +29,7 @@ Producto.create = (newProduct, result) => {
 };
 
 Producto.findById = (id, result) => {
-  sql.query(`SELECT * FROM productos WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM productos WHERE idProducto = ${id}`, (err, res) => {
     if (err) {
       console.log("Error: ", err);
       result(err, null);
@@ -63,8 +63,21 @@ Producto.getAll = (result) => {
 
 Producto.updateById = (id, producto, result) => {
   sql.query(
-    "UPDATE productos SET no_comun = ?, no_clave = ?, nu_cantidad = ?, nu_precio = ?, nu_cantMin = ?, tx_description = ?, nu_codigoBarras = ?, fl_favorito = ?, fl_delete = ?, no_user_creacion = ?, fe_creacion = ?, fe_modificacion = ? WHERE id = ?"
-    [producto.no_comun, producto.no_clave, producto.nu_cantidad, producto.nu_precio, producto.nu_cantMin, producto.tx_description, producto.nu_codigoBarras, producto.fl_favorito, producto.fl_delete, producto.no_user_creacion, producto.fe_creacion, producto.fe_modificacion, id],
+    "UPDATE productos SET comun = ?, clave = ?, cantidad = ?, precio = ?, cantidadMinima = ?, descripcion = ?, codigoBarras = ?, favorito = ?, eliminar = ?, userCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE id = ?"[
+      (producto.comun,
+      producto.clave,
+      producto.cantidad,
+      producto.precio,
+      producto.cantidadMinima,
+      producto.descripcion,
+      producto.codigoBarras,
+      producto.favorito,
+      producto.eliminar,
+      producto.userCreacion,
+      producto.fechaCreacion,
+      producto.fechaModificacion,
+      id)
+    ],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -101,6 +114,29 @@ Producto.remove = (id, result) => {
     console.log("Se eliminó el producto con número de id: ", id);
     result(null, res);
   });
+};
+
+Producto.logicDelete = (id, producto, result) => {
+  console.log("model", producto.eliminar);
+  sql.query(
+    `UPDATE productos SET eliminar = ${producto.eliminar} WHERE idProducto = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found product with the id
+        result({ kind: "No se pudo encontrar, no se puede eliminar" }, null);
+        return;
+      }
+
+      console.log("Se actualizo el producto: ", { id: id, ...producto });
+      result(null, { id: id, ...producto });
+    }
+  );
 };
 
 module.exports = Producto;
