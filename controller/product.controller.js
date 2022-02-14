@@ -10,18 +10,18 @@ exports.create = (req, res) => {
   }
 
   const product = new Product({
-    no_comun: req.body.no_comun,
-    no_clave: req.body.no_clave,
-    nu_cantidad: req.body.nu_cantidad,
-    nu_precio: req.body.nu_precio,
-    nu_cantMin: req.body.nu_cantMin,
-    tx_description: req.body.tx_description,
-    nu_codigoBarras: req.body.nu_codigoBarras,
-    fl_favorito: req.body.fl_favorito,
-    fl_delete: req.body.fl_delete,
-    no_user_creacion: req.body.no_user_creacion,
-    fe_creacion: req.body.fe_creacion,
-    fe_modificacion: req.body.fe_modificacion
+    comun: req.body.comun,
+    clave: req.body.clave,
+    cantidad: req.body.cantidad,
+    precio: req.body.precio,
+    cantidadMinima: req.body.cantidadMinima,
+    descripcion: req.body.descripcion,
+    codigoBarras: req.body.codigoBarras,
+    favorito: req.body.favorito,
+    eliminar: req.body.eliminar,
+    userCreacion: req.body.userCreacion,
+    fechaCreacion: req.body.fe_creacion,
+    fechaModificacion: req.body.fechaModificacion
   });
 
   Product.create(product, (err, data) => {
@@ -51,15 +51,15 @@ exports.findAll = (req,res) => {
 
 // Encuentra el producto por id
 exports.findOne = (req, res) => {
-    Product.findById(req.params.id, (err, data) => {
+    Product.findById(req.params.idProducto, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `No se pudo obtener el producto con el id:  ${req.params.id}.`
+              message: `No se pudo obtener el producto con el id:  ${req.params.idProducto}.`
             });
           } else {
             res.status(500).send({
-              message: "No se pudo obtener el producto con el id: " + req.params.id
+              message: "No se pudo obtener el producto con el id: " + req.params.idProducto
             });
           }
         } else res.send(data);
@@ -77,17 +77,17 @@ exports.update = (req, res) => {
   console.log(req.body);
 
   Product.updateById(
-    req.params.id,
+    req.params.idProducto,
     new Product(req.body),
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Error al editar la información del producto con id ${req.params.id}.`
+            message: `Error al editar la información del producto con id ${req.params.idProducto}.`
           });
         } else {
           res.status(500).send({
-            message: "Error al editar la información del producto con id " + req.params.id
+            message: "Error al editar la información del producto con id " + req.params.idProducto
           });
         }
       } else res.send(data);
@@ -97,15 +97,15 @@ exports.update = (req, res) => {
 
 // Delete a Product with the specified id in the request
 exports.delete = (req, res) => {
-    Product.remove(req.params.id, (err, data) => {
+    Product.remove(req.params.idProducto, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Np se encuentra el produclto con e id ${req.params.id}.`
+              message: `Np se encuentra el produclto con e id ${req.params.idProducto}.`
             });
           } else {
             res.status(500).send({
-              message: "Np se encuentra el produclto con eid " + req.params.id
+              message: "Np se encuentra el produclto con eid " + req.params.idProducto
             });
           }
         } else res.send({ message: `El producto fue eliminado exitosamente!` });

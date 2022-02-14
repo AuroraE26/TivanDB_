@@ -8,8 +8,7 @@ exports.create = (req, res) => {
     });
   }
 
-  const product = new Product({
-    idOrden: req.body.idOrden,
+  const sale = new Sale({
     estado: req.body.estado,
     costoTotal: req.body.costoTotal,
     usuarioCreacion: req.body.usuarioCreacion,
@@ -17,7 +16,7 @@ exports.create = (req, res) => {
     fechaModificacion: req.body.fechaModificacion
   });
 
-  Sale.create(product, (err, data) => {
+  Sale.create(sale, (err, data) => {
     if (err)
       res.status(500).send({
         code:500,
@@ -29,7 +28,7 @@ exports.create = (req, res) => {
 };
 
 
-// Obtienes todos los productos
+// Obtienes todos las ordenes
 exports.findAll = (req,res) => {
     Sale.getAll ((err, data) => {
       if (err){
@@ -44,15 +43,15 @@ exports.findAll = (req,res) => {
 
 // Encuentra la orden por id
 exports.findOne = (req, res) => {
-    Sale.findById(req.params.id, (err, data) => {
+    Sale.findById(req.params.idOrden, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `No se pudo obtener la orden con el id:  ${req.params.id}.`
+              message: `No se pudo obtener la orden con el id:  ${req.params.idOrden}.`
             });
           } else {
             res.status(500).send({
-              message: "No se pudo obtener la orden con el id: " + req.params.id
+              message: "No se pudo obtener la orden con el id: " + req.params.idOrden
             });
           }
         } else res.send(data);
@@ -71,17 +70,17 @@ exports.update = (req, res) => {
     console.log(req.body);
   
     Sale.updateById(
-      req.params.id,
+      req.params.idOrden,
       new Product(req.body),
       (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Error al editar la información de la orden con id ${req.params.id}.`
+              message: `Error al editar la información de la orden con id ${req.params.idOrden}.`
             });
           } else {
             res.status(500).send({
-              message: "Error al editar la información de la orden con id " + req.params.id
+              message: "Error al editar la información de la orden con id " + req.params.idOrden
             });
           }
         } else res.send(data);
