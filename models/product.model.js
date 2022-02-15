@@ -29,7 +29,7 @@ Product.create = (newProduct, result) => {
 };
 
 Product.findById = (idProducto, result) => {
-  sql.query(`SELECT * FROM productos WHERE id = ${idProducto}`, (err, res) => {
+  sql.query(`SELECT * FROM productos WHERE idProducto = ${idProducto}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -84,23 +84,5 @@ Product.updateById = (idProducto, product, result) => {
   );
 };
 
-Product.remove = (idProducto, result) => {
-  sql.query("DELETE FROM productos WHERE id = ?", idProducto, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found product with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted product with id: ", idProducto);
-    result(null, res);
-  });
-};
 
 module.exports = Product;

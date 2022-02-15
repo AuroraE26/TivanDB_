@@ -1,8 +1,7 @@
 const sql = require("../database/config");
 
 const Sale = function(sale) {
-  this.idOrden = sale.idOrden;
-  this.estado = sale.estado;
+  this.estadoOrden = sale.estadoOrden;
   this.costoTotal = sale.costoTotal;
   this.usuarioCreacion = sale.usuarioCreacion;
   this.fechaCreacion = sale.fechaCreacion;
@@ -16,13 +15,13 @@ Sale.create = (newSale, result) => {
         result(err, null);
         return;
       }
-      console.log("Se creo orden: ", { id: res.insertId, ...newSale });
-      result(null, { id: res.insertId, ...newSale });
+      console.log("Se creo orden: ", { idOrden: res.insertId, ...newSale });
+      result(null, { idOrden: res.insertId, ...newSale });
     });
   };
 
   Sale.findById = (id, result) => {
-    sql.query(`SELECT * FROM orden WHERE id = ${id}`, (err, res) => {
+    sql.query(`SELECT * FROM orden WHERE idOrden = ${idOrden}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -33,7 +32,6 @@ Sale.create = (newSale, result) => {
         result(null, res[0]);
         return;
       }
-      // not found product with the id
       result({ kind: "not_found" }, null);
     });
   };
@@ -51,10 +49,10 @@ Sale.create = (newSale, result) => {
     });
   };
 
-  Sale.updateById = (id, sale, result) => {
+  Sale.updateById = (idOrden, sale, result) => {
     sql.query(
-      "UPDATE orden SET idOrden = ?, estado = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE id = ?",
-      [sale.idOrden, sale.estado, sale.costoTotal, sale.usuarioCreacion, sale.fechaCreacion, sale.fechaModificacion, id],
+      "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idOrden = ?",
+      [sale.estadoOrden, sale.costoTotal, sale.usuarioCreacion, sale.fechaCreacion, sale.fechaModificacion, idOrden],
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -63,13 +61,12 @@ Sale.create = (newSale, result) => {
         }
   
         if (res.affectedRows == 0) {
-          // not found product with the id
           result({ kind: "not_found" }, null);
           return;
         }
   
-        console.log("Se actualizó la orden: ", { id: id, ...sale });
-        result(null, { id: id, ...sale });
+        console.log("Se actualizó la orden: ", { idOrden: idOrden, ...sale });
+        result(null, { idOrden: idOrden, ...sale });
       }
     );
   };
