@@ -1,18 +1,18 @@
 const sql = require("../database/config");
 
 const Product = function(product) {
-  this.no_comun = product.no_comun;
-  this.no_clave = product.no_clave;
-  this.nu_cantidad = product.nu_cantidad;
-  this.nu_precio = product.nu_precio;
-  this.nu_cantMin = product.nu_cantMin;
-  this.tx_description = product.tx_description;
-  this.nu_codigoBarras = product.nu_codigoBarras;
-  this.fl_favorito = product.fl_favorito;
-  this.fl_delete = product.fl_delete;
-  this.no_user_creacion = product.no_user_creacion;
-  this.fe_creacion = product.fe_creacion;
-  this.fe_modificacion = product.fe_modificacion;
+  this.comun = product.comun;
+  this.clave = product.clave;
+  this.cantidad = product.cantidad;
+  this.precio = product.precio;
+  this.cantidadMinima = product.cantidadMinima;
+  this.descripcion = product.descripcion;
+  this.codigoBarras = product.codigoBarras;
+  this.favorito = product.favorito;
+  this.eliminar = product.eliminar;
+  this.userCreacion = product.userCreacion;
+  this.fechaCreacion = product.fechaCreacion;
+  this.fechaModificacion = product.fechaModificacion;
 };
 
 Product.create = (newProduct, result) => {
@@ -23,13 +23,13 @@ Product.create = (newProduct, result) => {
       return;
     }
 
-    console.log("created Product: ", { id: res.insertId, ...newProduct });
-    result(null, { id: res.insertId, ...newProduct });
+    console.log("created Product: ", { idProducto: res.insertId, ...newProduct });
+    result(null, { idProducto: res.insertId, ...newProduct });
   });
 };
 
-Product.findById = (id, result) => {
-  sql.query(`SELECT * FROM productos WHERE id = ${id}`, (err, res) => {
+Product.findById = (idProducto, result) => {
+  sql.query(`SELECT * FROM productos WHERE idProducto = ${idProducto}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -61,10 +61,10 @@ Product.getAll = (result) => {
   });
 };
 
-Product.updateById = (id, product, result) => {
+Product.updateById = (idProducto, product, result) => {
   sql.query(
-    "UPDATE productos SET no_comun = ?, no_clave = ?, nu_cantMin = ?, nu_precio = ?, no_comun = ? WHERE id = ?",
-    [product.no_comun, product.no_clave, product.nu_cantMin, product.nu_precio, product.no_comun, id],
+    "UPDATE productos SET comun = ?, clave = ?, cantidad = ?, precio = ?, cantidadMinima = ?, descripcion = ?, codigoBarras = ?, favorito = ?, eliminar = ?, userCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idProducto = ?",
+    [product.comun, product.clave, product.cantidad, product.precio, product.cantidadMinima, product.descripcion, product.codigoBarras, product.favorito, product.eliminar, product.userCreacion, product.fechaCreacion, product.fechaModificacion, idProducto],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -78,29 +78,11 @@ Product.updateById = (id, product, result) => {
         return;
       }
 
-      console.log("updated product: ", { id: id, ...product });
-      result(null, { id: id, ...product });
+      console.log("Se actualizó el producto: ", { idProducto: idProducto, ...product });
+      result(null, { idProducto: idProducto, ...product });
     }
   );
 };
 
-Product.remove = (id, result) => {
-  sql.query("DELETE FROM productos WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found product with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted product with id: ", id);
-    result(null, res);
-  });
-};
 
 module.exports = Product;
