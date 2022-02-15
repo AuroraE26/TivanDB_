@@ -69,7 +69,7 @@ exports.update = (req, res) => {
   
     Sale.updateById(
       req.params.id,
-      new Product(req.body),
+      new Sale(req.body),
       (err, data) => {
         if (err) {
           if (err.kind === "not_found") {

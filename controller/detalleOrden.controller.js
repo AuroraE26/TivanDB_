@@ -11,6 +11,7 @@ exports.create = (req, res) => {
       idOrden: req.body.idOrden,
       cantidadPorducto: req.body.cantidadPorducto,
       costoTotalProducto: req.body.costoTotalProducto,
+      
       fechaCreacion: req.body.fechaCreacion
     });
   
