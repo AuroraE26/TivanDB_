@@ -14,9 +14,9 @@ var router = require("express").Router();
     router.get("/sales/:id", sales.findOne);
     router.put("/sales/:id", sales.update);
 
-    // router.post("/details/", details.create);
-    // router.get("/details/", details.findAll);
-    // router.get("/details/:id", details.findOne);
-    // router.put("/details/:id", details.update);
+    router.post("/details/", details.create);
+    router.get("/details/", details.findAll);
+    router.get("/details/:id", details.findOne);
+    router.put("/details/:id", details.update);
 
   module.exports =router;

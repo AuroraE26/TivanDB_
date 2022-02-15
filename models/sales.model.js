@@ -20,7 +20,7 @@ Sale.create = (newSale, result) => {
     });
   };
 
-  Sale.findById = (id, result) => {
+  Sale.findById = (idOrden, result) => {
     sql.query(`SELECT * FROM orden WHERE idOrden = ${idOrden}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
