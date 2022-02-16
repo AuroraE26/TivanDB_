@@ -2,7 +2,7 @@ const sql = require("../database/config");
 
 const DetalleOrden = function(detalleOrden) {
   this.idOrden = detalleOrden.idOrden;
-  this.cantidadPorducto = detalleOrden.cantidadPorducto;
+  this.cantidadProducto = detalleOrden.cantidadProducto;
   this.costoTotalProducto = detalleOrden.costoTotalProducto;
   this.fechaCreacion = detalleOrden.fechaCreacion;
 };
@@ -55,8 +55,8 @@ DetalleOrden.getAll = (result) => {
 
 DetalleOrden.updateById = (idDetalleOrden, detalleOrden, result) => {
     sql.query(
-      "UPDATE detalleOrden SET idOrden = ?, cantidadPorducto = ?, costoTotalProducto = ?, fechaCreacion = ?  WHERE idDetalleOrden = ?",
-      [detalleOrden.idOrden, detalleOrden.cantidadPorducto, detalleOrden.costoTotalProducto, detalleOrden.fechaCreacion, idDetalleOrden],
+      "UPDATE detalleOrden SET idOrden = ?, cantidadProducto = ?, costoTotalProducto = ?, fechaCreacion = ?  WHERE idDetalleOrden = ?",
+      [detalleOrden.idOrden, detalleOrden.cantidadProducto, detalleOrden.costoTotalProducto, detalleOrden.fechaCreacion, idDetalleOrden],
       (err, res) => {
         if (err) {
           console.log("error: ", err);

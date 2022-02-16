@@ -6,4 +6,4 @@ router.get("/", sales.findAll);
 router.get("/:id", sales.findOne);
 router.put("/:id", sales.update);
 
-module.exports =router;
+module.exports = router;

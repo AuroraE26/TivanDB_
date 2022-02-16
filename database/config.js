@@ -1,7 +1,5 @@
 const mysql = require ("mysql");
 
-
-
 //Crear la conexion
 const connection = mysql.createConnection({
     host: process.env.TIVAN_RDS_HOST,

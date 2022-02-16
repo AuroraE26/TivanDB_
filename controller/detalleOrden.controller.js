@@ -9,9 +9,8 @@ exports.create = (req, res) => {
   
     const detalleOrden = new DetalleOrden({
       idOrden: req.body.idOrden,
-      cantidadPorducto: req.body.cantidadPorducto,
+      cantidadProducto: req.body.cantidadProducto,
       costoTotalProducto: req.body.costoTotalProducto,
-      
       fechaCreacion: req.body.fechaCreacion
     });
   
