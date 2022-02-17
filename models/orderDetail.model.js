@@ -1,13 +1,14 @@
 const sql = require("../database/config");
 
-const DetalleOrden = function(detalleOrden) {
+const OrderDetail = function(detalleOrden) {
   this.idOrden = detalleOrden.idOrden;
-  this.cantidadPorducto = detalleOrden.cantidadPorducto;
+  this.cantidadProducto = detalleOrden.cantidadProducto;
   this.costoTotalProducto = detalleOrden.costoTotalProducto;
   this.fechaCreacion = detalleOrden.fechaCreacion;
+  this.detalleOrden
 };
 
-DetalleOrden.create = (newDetalle, result) => {
+OrderDetail.create = (newDetalle, result) => {
     sql.query("INSERT INTO detalleOrden SET ?", newDetalle, (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -21,7 +22,7 @@ DetalleOrden.create = (newDetalle, result) => {
   };
 
 
-DetalleOrden.findById = (idDetalleOrden, result) => {
+  OrderDetail.findById = (idDetalleOrden, result) => {
     sql.query(`SELECT * FROM detalleOrden WHERE idDetalleOrden = ${idDetalleOrden}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -39,7 +40,7 @@ DetalleOrden.findById = (idDetalleOrden, result) => {
     });
   };
 
-DetalleOrden.getAll = (result) => {
+  OrderDetail.getAll = (result) => {
     let query = "SELECT * FROM detalleOrden";
     sql.query(query, (err, res) => {
       if (err) {
@@ -53,10 +54,10 @@ DetalleOrden.getAll = (result) => {
     });
 };
 
-DetalleOrden.updateById = (idDetalleOrden, detalleOrden, result) => {
+OrderDetail.updateById = (idDetalleOrden, detalleOrden, result) => {
     sql.query(
-      "UPDATE detalleOrden SET idOrden = ?, cantidadPorducto = ?, costoTotalProducto = ?, fechaCreacion = ?  WHERE idDetalleOrden = ?",
-      [detalleOrden.idOrden, detalleOrden.cantidadPorducto, detalleOrden.costoTotalProducto, detalleOrden.fechaCreacion, idDetalleOrden],
+      "UPDATE detalleOrden SET idOrden = ?, cantidadProducto = ?, costoTotalProducto = ?, fechaCreacion = ?  WHERE idDetalleOrden = ?",
+      [detalleOrden.idOrden, detalleOrden.cantidadProducto, detalleOrden.costoTotalProducto, detalleOrden.fechaCreacion, idDetalleOrden],
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -75,4 +76,4 @@ DetalleOrden.updateById = (idDetalleOrden, detalleOrden, result) => {
     );
   };
 
-  module.exports = DetalleOrden;
+  module.exports = OrderDetail;

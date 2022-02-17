@@ -1,26 +1,26 @@
 const sql = require("../database/config");
 
-const Sale = function(sale) {
-  this.estadoOrden = sale.estadoOrden;
-  this.costoTotal = sale.costoTotal;
-  this.usuarioCreacion = sale.usuarioCreacion;
-  this.fechaCreacion = sale.fechaCreacion;
-  this.fechaModificacion = sale.fechaModificacion;
+const Order = function(order) {
+  this.estadoOrden = order.estadoOrden;
+  this.costoTotal = order.costoTotal;
+  this.usuarioCreacion = order.usuarioCreacion;
+  this.fechaCreacion = order.fechaCreacion;
+  this.fechaModificacion = order.fechaModificacion;
 };
 
-Sale.create = (newSale, result) => {
-    sql.query("INSERT INTO orden SET ?", newSale, (err, res) => {
+Order.create = (newOrder, result) => {
+    sql.query("INSERT INTO orden SET ?", newOrder, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
         return;
       }
-      console.log("Se creo orden: ", { idOrden: res.insertId, ...newSale });
-      result(null, { idOrden: res.insertId, ...newSale });
+      console.log("Se creo orden: ", { idOrden: res.insertId, ...newOrder });
+      result(null, { idOrden: res.insertId, ...newOrder });
     });
   };
 
-  Sale.findById = (idOrden, result) => {
+  Order.findById = (idOrden, result) => {
     sql.query(`SELECT * FROM orden WHERE idOrden = ${idOrden}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -36,7 +36,7 @@ Sale.create = (newSale, result) => {
     });
   };
 
-  Sale.getAll = (result) => {
+  Order.getAll = (result) => {
     let query = "SELECT * FROM orden";
     sql.query(query, (err, res) => {
       if (err) {
@@ -44,15 +44,15 @@ Sale.create = (newSale, result) => {
         result(err, null);
         return;
       }
-      console.log("products: ", res);
+      console.log("Orders: ", res);
       result(null, res);
     });
   };
 
-  Sale.updateById = (idOrden, sale, result) => {
+  Order.updateById = (idOrden, order, result) => {
     sql.query(
       "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idOrden = ?",
-      [sale.estadoOrden, sale.costoTotal, sale.usuarioCreacion, sale.fechaCreacion, sale.fechaModificacion, idOrden],
+      [order.estadoOrden, order.costoTotal, order.usuarioCreacion, order.fechaCreacion, order.fechaModificacion, idOrden],
       (err, res) => {
         if (err) {
           console.log("error: ", err);
@@ -65,11 +65,11 @@ Sale.create = (newSale, result) => {
           return;
         }
   
-        console.log("Se actualizó la orden: ", { idOrden: idOrden, ...sale });
-        result(null, { idOrden: idOrden, ...sale });
+        console.log("Se actualizó la orden: ", { idOrden: idOrden, ...order });
+        result(null, { idOrden: idOrden, ...order });
       }
     );
   };
 
 
-  module.exports = Sale;
+  module.exports = Order;

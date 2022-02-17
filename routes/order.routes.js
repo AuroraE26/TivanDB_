@@ -1,4 +1,4 @@
-const sales = require("../controller/sales.controller.js");
+const sales = require("../controller/order.controller.js");
 var router = require("express").Router();
 
 router.post("/", sales.create);

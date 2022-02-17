@@ -1,4 +1,4 @@
-const Sale = require("../models/sales.model.js");
+const Order = require("../models/order.model.js");
 
 
 exports.create = (req, res) => {
@@ -8,7 +8,7 @@ exports.create = (req, res) => {
     });
   }
 
-  const sale = new Sale({
+  const order = new Order({
     estadoOrden: req.body.estadoOrden,
     costoTotal: req.body.costoTotal,
     usuarioCreacion: req.body.usuarioCreacion,
@@ -16,7 +16,7 @@ exports.create = (req, res) => {
     fechaModificacion: req.body.fechaModificacion
   });
 
-  Sale.create(sale, (err, data) => {
+  Order.create(order, (err, data) => {
     if (err)
       res.status(500).send({
         code:500,
@@ -30,7 +30,7 @@ exports.create = (req, res) => {
 
 
 exports.findAll = (req,res) => {
-    Sale.getAll ((err, data) => {
+  Order.getAll ((err, data) => {
       if (err){
         res.status(500).send({
           code: 500,
@@ -43,7 +43,7 @@ exports.findAll = (req,res) => {
 
 
 exports.findOne = (req, res) => {
-    Sale.findById(req.params.id, (err, data) => {
+  Order.findById(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
@@ -67,9 +67,9 @@ exports.update = (req, res) => {
     }
     console.log(req.body);
   
-    Sale.updateById(
+    Order.updateById(
       req.params.id,
-      new Sale(req.body),
+      new Order(req.body),
       (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
