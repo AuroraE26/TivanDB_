@@ -129,7 +129,7 @@ exports.logicDelete = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message: "Error delete Product with id " + req.params.id,
+          message: "Error delete Products with id " + req.params.id,
         });
       }
     } else res.send(data);
