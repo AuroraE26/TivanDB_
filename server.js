@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 const cors = require("cors");
 
 require("dotenv").config();
@@ -7,14 +8,20 @@ const salesRoutes = require("./routes/order.routes");
 const detailsRoutes = require("./routes/details.routes"); 
 
 const app = express();
+
+//setting
+app.set("port", process.env.TIVAN_API_PORT || 3001);
+
+//middleware
+app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
-app.use('/api/productos', productRoutes);
-app.use('/api/sales', salesRoutes);
-app.use('/api/details', detailsRoutes);
 
-const PORT = process.env.TIVAN_API_PORT;
-app.listen(PORT, ()=>{
-    console.log(`run serven in port ${PORT}`);
+//routes
+app.use("/api/productos", productRoutes);
+app.use("/api/sales", salesRoutes);
+app.use("/api/details", detailsRoutes);
+
+app.listen(app.get("port"), () => {
+  console.log(`Server running in port ${app.get("port")}`);
 });
-

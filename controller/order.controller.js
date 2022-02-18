@@ -4,7 +4,7 @@ const Order = require("../models/order.model.js");
 exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
-      message: "No puede estar vacio!"
+      message: "No puede estar vacio!",
     });
   }
 
@@ -13,15 +13,14 @@ exports.create = (req, res) => {
     costoTotal: req.body.costoTotal,
     usuarioCreacion: req.body.usuarioCreacion,
     fechaCreacion: req.body.fechaCreacion,
-    fechaModificacion: req.body.fechaModificacion
+    fechaModificacion: req.body.fechaModificacion,
   });
 
   Order.create(order, (err, data) => {
     if (err)
       res.status(500).send({
-        code:500,
-        message:
-          err.message || "Error al dar de alta la orden."
+        code: 500,
+        message: err.message || "Error al dar de alta la orden.",
       });
     else res.send(data);
   });
@@ -41,7 +40,6 @@ exports.findAll = (req,res) => {
       });
     };
 
-
 exports.findOne = (req, res) => {
   Order.findById(req.params.id, (err, data) => {
         if (err) {
@@ -58,30 +56,27 @@ exports.findOne = (req, res) => {
       });
 };
 
-
 exports.update = (req, res) => {
-    if (!req.body) {
-      res.status(400).send({
-        message: "No puede estar vacío."
-      });
-    }
-    console.log(req.body);
-  
-    Order.updateById(
-      req.params.id,
-      new Order(req.body),
-      (err, data) => {
-        if (err) {
-          if (err.kind === "not_found") {
-            res.status(404).send({
-              message: `Error al editar la información de la orden con id ${req.params.id}.`
-            });
-          } else {
-            res.status(500).send({
-              message: "Error al editar la información de la orden con id " + req.params.id
-            });
-          }
-        } else res.send(data);
-      }
-    );
-  };
+  if (!req.body) {
+    res.status(400).send({
+      message: "No puede estar vacío."
+    });
+  }
+  console.log(req.body);
+  Order.updateById(
+    req.params.id,
+    new Order(req.body),
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Error al editar la información de la orden con id ${req.params.id}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error al editar la información de la orden con id " + req.params.id
+          });
+        }
+      } else res.send(data);
+})
+}
