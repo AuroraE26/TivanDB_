@@ -3,9 +3,9 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 require("dotenv").config();
-const productRoutes = require("./routes/product.routes");
-const salesRoutes = require("./routes/sales.routes");
-const detailsRoutes = require("./routes/details.routes");
+const productRoutes = require("./routes/product.routes"); 
+const salesRoutes = require("./routes/order.routes"); 
+const detailsRoutes = require("./routes/details.routes"); 
 
 const app = express();
 
