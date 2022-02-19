@@ -1,4 +1,4 @@
-const Order = require("../models/orderDetail.case");
+const Order = require("../usercase/orderDetail.case");
 
 
 exports.create = (req, res) => {
