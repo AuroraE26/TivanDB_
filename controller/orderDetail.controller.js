@@ -9,11 +9,10 @@ exports.create = (req, res) => {
   }
 
   const order = new Order({
-    estadoOrden: req.body.estadoOrden,
-    costoTotal: req.body.costoTotal,
-    usuarioCreacion: req.body.usuarioCreacion,
-    fechaCreacion: req.body.fechaCreacion,
-    fechaModificacion: req.body.fechaModificacion,
+    idOrden: req.body.idOrden,
+    cantidadProducto: req.body.cantidadProducto,
+    costoTotalProducto: req.body.costoTotalProducto,
+    fechaCreacion: req.body.fechaCreacion
   });
 
   Order.create(order, (err, data) => {

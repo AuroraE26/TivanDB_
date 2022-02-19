@@ -1,15 +1,27 @@
 const sql = require("../database/config");
 const Order = require("../models/order.model");
 
-Order.create = (newSale, result) => {
-  sql.query("INSERT INTO orden SET ?", newSale, (err, res) => {
+Order.create = (newOrder, result) => {
+  sql.query("INSERT INTO orden SET ?", newOrder, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-    console.log("Se creo orden: ", { idOrden: res.insertId, ...newSale });
-    result(null, { idOrden: res.insertId, ...newSale });
+    console.log("Se creo orden: ", { idOrden: res.insertId, ...newOrder });
+    result(null, { idOrden: res.insertId, ...newOrder });
+  });
+};
+
+Order.createDetailedOrder = (newOrder, result) => {
+  sql.query("INSERT INTO orden SET ?", newOrder, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("Se creo orden: ", { idOrden: res.insertId, ...newOrder });
+    result(null, { idOrden: res.insertId, ...newOrder });
   });
 };
 
@@ -37,22 +49,15 @@ Order.getAll = (result) => {
       result(err, null);
       return;
     }
-    console.log("products: ", res);
+    console.log("Orders: ", res);
     result(null, res);
   });
 };
 
-Order.updateById = (idOrden, sale, result) => {
+Order.updateById = (idOrden, order, result) => {
   sql.query(
     "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idOrden = ?",
-    [
-      sale.estadoOrden,
-      sale.costoTotal,
-      sale.usuarioCreacion,
-      sale.fechaCreacion,
-      sale.fechaModificacion,
-      idOrden,
-    ],
+    [order.estadoOrden, order.costoTotal, order.usuarioCreacion, order.fechaCreacion, order.fechaModificacion, idOrden],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -65,8 +70,8 @@ Order.updateById = (idOrden, sale, result) => {
         return;
       }
 
-      console.log("Se actualizó la orden: ", { idOrden: idOrden, ...sale });
-      result(null, { idOrden: idOrden, ...sale });
+      console.log("Se actualizó la orden: ", { idOrden: idOrden, ...order });
+      result(null, { idOrden: idOrden, ...order });
     }
   );
 };
