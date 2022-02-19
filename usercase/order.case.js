@@ -1,7 +1,7 @@
 const sql = require("../database/config");
-const Sale = require("../models/sales.model");
+const Order = require("../models/order.model");
 
-Sale.create = (newSale, result) => {
+Order.create = (newSale, result) => {
   sql.query("INSERT INTO orden SET ?", newSale, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -13,7 +13,7 @@ Sale.create = (newSale, result) => {
   });
 };
 
-Sale.findById = (idOrden, result) => {
+Order.findById = (idOrden, result) => {
   sql.query(`SELECT * FROM orden WHERE idOrden = ${idOrden}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -29,7 +29,7 @@ Sale.findById = (idOrden, result) => {
   });
 };
 
-Sale.getAll = (result) => {
+Order.getAll = (result) => {
   let query = "SELECT * FROM orden";
   sql.query(query, (err, res) => {
     if (err) {
@@ -42,7 +42,7 @@ Sale.getAll = (result) => {
   });
 };
 
-Sale.updateById = (idOrden, sale, result) => {
+Order.updateById = (idOrden, sale, result) => {
   sql.query(
     "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idOrden = ?",
     [
@@ -71,4 +71,4 @@ Sale.updateById = (idOrden, sale, result) => {
   );
 };
 
-module.exports = Sale;
+module.exports = Order;

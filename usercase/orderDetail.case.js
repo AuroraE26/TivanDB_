@@ -1,5 +1,5 @@
 const sql = require("../database/config");
-const DetalleOrden = require("../models/detalleOrden.model");
+const DetalleOrden = require("../models/orderDetail.model");
 
 DetalleOrden.create = (newDetalle, result) => {
   sql.query("INSERT INTO detalleOrden SET ?", newDetalle, (err, res) => {

@@ -1,11 +1,10 @@
 const sql = require("../database/config");
 
-const OrderDetail = function(detalleOrden) {
-  this.idOrden = detalleOrden.idOrden;
-  this.cantidadProducto = detalleOrden.cantidadProducto;
-  this.costoTotalProducto = detalleOrden.costoTotalProducto;
-  this.fechaCreacion = detalleOrden.fechaCreacion;
-  this.detalleOrden
+const OrderDetail = function(orderDetail) {
+  this.idOrden = orderDetail.idOrden;
+  this.cantidadProducto = orderDetail.cantidadProducto;
+  this.costoTotalProducto = orderDetail.costoTotalProducto;
+  this.fechaCreacion = orderDetail.fechaCreacion;
 };
 
 OrderDetail.create = (newDetalle, result) => {
