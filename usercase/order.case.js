@@ -143,4 +143,26 @@ Order.updateById = (idOrden, order, result) => {
   );
 };
 
+Order.logicDelete = (id, producto, result) => {
+  sql.query(
+    `UPDATE orden SET eliminar = ${producto.eliminar} WHERE idOrden = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found product with the id
+        result({ kind: "No se pudo encontrar, no se puede eliminar" }, null);
+        return;
+      }
+
+      console.log("Se actualizo el producto: ", { id: id, ...producto });
+      result(null, { id: id, ...producto });
+    }
+  );
+};
+
 module.exports = Order;

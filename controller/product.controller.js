@@ -1,4 +1,8 @@
 const Product = require("../usercase/product.case");
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
+const { uploadFile } = require("../lib/s3");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -85,3 +89,95 @@ exports.update = (req, res) => {
     } else res.send(data);
   });
 };
+
+exports.logicDelete = (req, res) => {
+  // // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!",
+    });
+  }
+  console.log(req.body);
+  Product.logicDelete(req.params.id, req.body, (err, data) => {
+    console.log("revisar", req.body);
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Product`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error delete Products" ,
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+exports.favorite = (req, res) => {
+  // // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!",
+    });
+  }
+  console.log(req.body);
+  Product.favorite(req.params.id, req.body, (err, data) => {
+    console.log("revisar", req.body);
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Product.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error delete Products.",
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+exports.pieces = (req, res) => {
+  // // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!",
+    });
+  }
+  console.log(req.body);
+  Product.pieces(req.params.id, req.body, (err, data) => {
+    console.log("revisar", req.body);
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Product.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error delete Products.",
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+exports.uploadImage = async (req, res) => {
+    console.log(req.file);
+  
+    // uploading to AWS S3
+    const result = await uploadFile(req.file);
+    console.log("S3 response", result);
+  
+    // You may apply filter, resize image before sending to client
+  
+    // Deleting from local if uploaded in S3 bucket
+    await unlinkFile(req.file.path);
+  
+    res.send({
+      status: "success",
+      message: "File uploaded successfully",
+      url:result.Location,
+      data: req.file,
+    });
+  };

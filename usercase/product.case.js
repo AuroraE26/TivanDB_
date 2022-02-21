@@ -93,4 +93,72 @@ Product.updateById = (idProducto, product, result) => {
   );
 };
 
+Product.logicDelete = (id, producto, result) => {
+  console.log("model", producto.eliminar);
+  sql.query(
+    `UPDATE productos SET eliminar = ${producto.eliminar} WHERE idProducto = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found product with the id
+        result({ kind: "No se pudo encontrar, no se puede eliminar" }, null);
+        return;
+      }
+
+      console.log("Se actualizo el producto: ", { id: id, ...producto });
+      result(null, { id: id, ...producto });
+    }
+  );
+};
+
+Product.favorite = (id, producto, result) => {
+  console.log("model", producto.eliminar);
+  sql.query(
+    `UPDATE productos SET favorito = ${producto.favorito} WHERE idProducto = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found product with the id
+        result({ kind: "No se pudo encontrar, no se puede eliminar" }, null);
+        return;
+      }
+
+      console.log("Se actualizo el producto: ", { id: id, ...producto });
+      result(null, { id: id, ...producto });
+    }
+  );
+};
+
+Product.pieces = (id, producto, result) => {
+  sql.query(
+    `UPDATE productos SET cantidad = ${producto.cantidad} WHERE idProducto = ${id}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found product with the id
+        result({ kind: "No se pudo encontrar, no se puede eliminar" }, null);
+        return;
+      }
+
+      console.log("Se actualizo el producto: ", { id: id, ...producto });
+      result(null, { id: id, ...producto });
+    }
+  );
+};
+
 module.exports = Product;
