@@ -77,6 +77,28 @@ Order.createDetail = (newOder, products, result) => {
   })
 };
 
+
+Order.findById = (idOrden, result) => {
+  sql.query(
+    `SELECT * FROM detalleOrden WHERE idDetalleOrden = ${idDetalleOrden}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        console.log("found detalle de Orden: ", res[0]);
+        result(null, res[0]);
+        return;
+      }
+
+      result({ kind: "not_found" }, null);
+    }
+  );
+};
+
 Order.getAll = (result) => {
   let query = "SELECT * FROM orden";
   sql.query(query, (err, res) => {
