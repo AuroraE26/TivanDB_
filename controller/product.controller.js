@@ -1,6 +1,7 @@
 const Product = require("../usercase/product.case");
-
-const upload = require("../lib/common");
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
 const { uploadFile } = require("../lib/s3");
 
 exports.create = (req, res) => {
@@ -161,8 +162,7 @@ exports.pieces = (req, res) => {
   });
 };
 
-exports.uploadImage=()=>{
-  upload.single("image"), async (req, res) => {
+exports.uploadImage = async (req, res) => {
     console.log(req.file);
   
     // uploading to AWS S3
@@ -177,7 +177,7 @@ exports.uploadImage=()=>{
     res.send({
       status: "success",
       message: "File uploaded successfully",
+      url:result.Location,
       data: req.file,
     });
   };
-} 
