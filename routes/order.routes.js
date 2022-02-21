@@ -5,5 +5,6 @@ router.post("/", sales.create);
 router.get("/", sales.findAll);
 router.get("/:id", sales.findOne);
 router.put("/:id", sales.update);
+router.patch("/:id",sales.logicDelete)
 
 module.exports =router;
