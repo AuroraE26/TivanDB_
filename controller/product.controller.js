@@ -1,4 +1,8 @@
 const Product = require("../usercase/product.case");
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
+const { uploadFile } = require("../lib/s3");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -157,3 +161,23 @@ exports.pieces = (req, res) => {
     } else res.send(data);
   });
 };
+
+exports.uploadImage = async (req, res) => {
+    console.log(req.file);
+  
+    // uploading to AWS S3
+    const result = await uploadFile(req.file);
+    console.log("S3 response", result);
+  
+    // You may apply filter, resize image before sending to client
+  
+    // Deleting from local if uploaded in S3 bucket
+    await unlinkFile(req.file.path);
+  
+    res.send({
+      status: "success",
+      message: "File uploaded successfully",
+      url:result.Location,
+      data: req.file,
+    });
+  };

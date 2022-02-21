@@ -25,9 +25,11 @@
   },
   "homepage": "https://github.com/AuroraE26/TivanDB#readme",
   "dependencies": {
+    "aws-sdk": "^2.1077.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "multer": "^1.4.4",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
