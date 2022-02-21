@@ -17,6 +17,34 @@ OrderDetail.create = (newDetalle, result) => {
   });
 };
 
+// OrderDetail.createDetail = (newDetalle, result) => {
+//   sql.query("INSERT INTO detalleOrden SET ?", newDetalle, (err, res) => {
+//     if (err) {
+//       console.log("error: ", err);
+//       result(err, null);
+//       return;
+//     }
+
+//     console.log("created order detail: ", {
+//       idDetalleOrden: res.insertId,
+//       ...newDetalle
+//     });
+//     result(null, {idDetalleOrden: res.insertId,  ...newDetalle });
+//   });
+//   sql.query("INSERT INTO _detalleOrdenToProducto (idOrden) SELECT idOrden FROM detalleOrden WHERE idOrdenProducto=idOrden", (err, res) => {
+//     if (err) {
+//       console.log("error: ", err);
+//       result(err, null);
+//       return;
+//     }
+
+//     console.log("created order detail: ", {
+//       idOrdenProducto: res.insertId
+//     });
+//     result(null, {idOrdenProducto: res.insertId});
+//   });
+// };
+
 OrderDetail.findById = (idDetalleOrden, result) => {
   sql.query(
     `SELECT * FROM detalleOrden WHERE idDetalleOrden = ${idDetalleOrden}`,

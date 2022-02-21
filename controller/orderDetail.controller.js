@@ -25,7 +25,29 @@ exports.create = (req, res) => {
   });
 };
 
+exports.createDetail = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "No puede estar vacio!",
+    });
+  }
 
+  const order = new Order({
+    idOrden: req.body.idOrden,
+    cantidadProducto: req.body.cantidadProducto,
+    costoTotalProducto: req.body.costoTotalProducto,
+    fechaCreacion: req.body.fechaCreacion
+  });
+
+  Order.createDetail(order,orderCreated, (err, data) => {
+    if (err)
+      res.status(500).send({
+        code: 500,
+        message: err.message || "Error al dar de alta la orden.",
+      });
+    else res.send(data);
+  });
+};
 
 exports.findAll = (req,res) => {
   Order.getAll ((err, data) => {
