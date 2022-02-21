@@ -1,15 +1,94 @@
+const res = require("express/lib/response");
 const sql = require("../database/config");
 const Order = require("../models/order.model");
+const OrderDetail = require("../models/orderDetail.model");
 
-Order.create = (newSale, result) => {
-  sql.query("INSERT INTO orden SET ?", newSale, (err, res) => {
+
+Order.create = (newOrder, result) => {
+  sql.query("INSERT INTO orden SET ?", newOrder, (err1, res1) => {
+    if (err1) {
+      console.log("error: ", err1);
+      result(err1, null);
+      return;
+    }
+    console.log("Se creo orden: ", { idOrden: res1.insertId, ...newOrder });
+    result(null, { idOrden: res1.insertId, ...newOrder });
+    
+    // return res.insertId;
+  });
+  
+};
+
+
+OrderDetail.createDetail = (newOder, products, result) => {
+  sql.query("INSERT INTO orden SET ?", newOder, (err1, res1) => {
+    if (err1) {
+      console.log("error: ", err1);
+      result(err1, null);
+      return;
+    }
+
+    console.log("created order detail: ", {
+      idOrden: res1.insertId,
+      ...newOder
+    });
+
+      sql.query("INSERT INTO detalleOrden SET idOrden=?", 
+        res1.insertId, 
+          (err2, res2) => {
+          if (err2) {
+            console.log("error: ", err2);
+          result(err2, null);
+          return;
+          }
+          console.log("created order detail: ", {
+            idDetalleOrden: res2.insertId
+      });
+      
+      sql.query("INSERT INTO _DetalleOrdenToProducto SET idDetalleOrden=?", res2.insertId, (err3, res3) => {
+        if (err3) {
+          console.log("error: ", err3);
+          result(err3, null);
+          return;
+        }
+    
+        console.log("created order detail: ", {
+          idOrdenProducto: res3.insertId
+        });
+      });
+
+      sql.query("UPDATE _DetalleOrdenToProducto SET idProducto=? WHERE idDetalleOrden = ?",[products.id, res2.insertId], (err1, res1) => {
+        if (err1) {
+          console.log("error: ", err1);
+          // result(err1, null);
+          return;
+        }
+    
+        result(null, {idOrden: res1.insertId,  ...newOder, idProduct: products.id});
+      });
+      sql.query("UPDATE detalleOrden SET cantidadProducto=?, costoTotalProducto=?, fechaCreacion=? WHERE idDetalleOrden = ?",[products.cantidadProducto, products.costoTotalProducto, products.fechaCreacion, res2.insertId], (err1, res1) => {
+        if (err1) {
+          console.log("error: ", err1);
+          return;
+        }
+    
+        result(null, {idOrden: res1.insertId,  ...newOder, idProduct: products.id});
+      });
+   
+    });
+  })
+};
+
+Order.getAll = (result) => {
+  let query = "SELECT * FROM orden";
+  sql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-    console.log("Se creo orden: ", { idOrden: res.insertId, ...newSale });
-    result(null, { idOrden: res.insertId, ...newSale });
+    console.log("Orders: ", res);
+    result(null, res);
   });
 };
 
@@ -37,22 +116,15 @@ Order.getAll = (result) => {
       result(err, null);
       return;
     }
-    console.log("products: ", res);
+    console.log("Orders: ", res);
     result(null, res);
   });
 };
 
-Order.updateById = (idOrden, sale, result) => {
+Order.updateById = (idOrden, order, result) => {
   sql.query(
     "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idOrden = ?",
-    [
-      sale.estadoOrden,
-      sale.costoTotal,
-      sale.usuarioCreacion,
-      sale.fechaCreacion,
-      sale.fechaModificacion,
-      idOrden,
-    ],
+    [order.estadoOrden, order.costoTotal, order.usuarioCreacion, order.fechaCreacion, order.fechaModificacion, idOrden],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -65,8 +137,8 @@ Order.updateById = (idOrden, sale, result) => {
         return;
       }
 
-      console.log("Se actualizó la orden: ", { idOrden: idOrden, ...sale });
-      result(null, { idOrden: idOrden, ...sale });
+      console.log("Se actualizó la orden: ", { idOrden: idOrden, ...order });
+      result(null, { idOrden: idOrden, ...order });
     }
   );
 };

@@ -19,7 +19,7 @@ app.use(express.json());
 
 //routes
 app.use("/api/productos", productRoutes);
-app.use("/api/sales", salesRoutes);
+app.use("/api/order", salesRoutes);
 app.use("/api/details", detailsRoutes);
 
 app.listen(app.get("port"), () => {

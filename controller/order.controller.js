@@ -1,5 +1,6 @@
 const Order = require("../usercase/order.case");
-
+const OrderDetail = require("../usercase/orderDetail.case");
+const Product = require("../usercase/product.case");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -26,6 +27,32 @@ exports.create = (req, res) => {
   });
 };
 
+
+exports.createDetailedOrder = (req, res) => {
+  const order = new Order({
+    estadoOrden: req.body.estadoOrden,
+    costoTotal: req.body.costoTotal,
+    usuarioCreacion: req.body.usuarioCreacion,
+    fechaCreacion: req.body.fechaCreacion,
+    fechaModificacion: req.body.fechaModificacion,
+  });
+
+  const products = new OrderDetail({
+    products: req.body.products
+  });
+
+    for (let i = 0; i < req.body.products.length; i++) {
+    // console.log(req.body.products[i])
+    OrderDetail.createDetail(order,req.body.products[i], (err, data) => {
+      if (err)
+      res.status(500).send({
+          code: 500,
+          message: err.message || "Error al dar de alta la orden.",
+        });
+          //  res.send(newData);
+    }); 
+  }
+};
 
 
 exports.findAll = (req,res) => {
