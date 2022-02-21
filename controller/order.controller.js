@@ -1,5 +1,6 @@
 const Order = require("../usercase/order.case");
 const OrderDetail = require("../usercase/orderDetail.case");
+const Product = require("../usercase/product.case");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -27,6 +28,26 @@ exports.create = (req, res) => {
 };
 //
 
+// exports.createDetailedOrder = (req, res) => {
+//   const order = new Order({
+//     estadoOrden: req.body.estadoOrden,
+//     costoTotal: req.body.costoTotal,
+//     usuarioCreacion: req.body.usuarioCreacion,
+//     fechaCreacion: req.body.fechaCreacion,
+//     fechaModificacion: req.body.fechaModificacion,
+//   });
+// Order.createDetail(order,(err, data) => {
+//     if (err)
+//     res.status(500).send({
+//         code: 500,
+//         message: err.message || "Error al dar de alta la orden.",
+//       });
+      
+//     else res.send(data);
+//   });
+// };
+
+
 exports.createDetailedOrder = (req, res) => {
   const order = new Order({
     estadoOrden: req.body.estadoOrden,
@@ -36,26 +57,20 @@ exports.createDetailedOrder = (req, res) => {
     fechaModificacion: req.body.fechaModificacion,
   });
 
-  // const orderDet = new OrderDetail({
-  //   cantidadProducto: req.body.cantidadProducto,
-  //   costoTotalProducto: req.body.costoTotalProducto,
-  //   fechaCreacion: req.body.fechaCreacion
-  // });
+  const products = new OrderDetail({
+    products: req.body.products
+  });
 
-Order.createDetail(order,(err, data) => {
+  OrderDetail.createDetail(order,products, (err, data) => {
     if (err)
     res.status(500).send({
         code: 500,
         message: err.message || "Error al dar de alta la orden.",
       });
       
-    else {
-    res.send(data)}
+    else res.send(data);
   });
-  // 
- 
 };
-
 
 
 // exports.createDetailedOrder = (req, res) => {
