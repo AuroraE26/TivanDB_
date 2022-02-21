@@ -1,8 +1,6 @@
 const res = require("express/lib/response");
 const sql = require("../database/config");
 const Order = require("../models/order.model");
-const OrderDetail = require("../models/orderDetail.model");
-
 
 Order.create = (newOrder, result) => {
   sql.query("INSERT INTO orden SET ?", newOrder, (err1, res1) => {
@@ -20,7 +18,7 @@ Order.create = (newOrder, result) => {
 };
 
 
-OrderDetail.createDetail = (newOder, products, result) => {
+Order.createDetail = (newOder, products, result) => {
   sql.query("INSERT INTO orden SET ?", newOder, (err1, res1) => {
     if (err1) {
       console.log("error: ", err1);
