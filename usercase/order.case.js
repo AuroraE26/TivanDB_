@@ -18,83 +18,96 @@ Order.create = (newOrder, result) => {
 };
 
 
-Order.createDetail = (newOder, products, result) => {
+Order.createDetail = (newOder, result) => {
   sql.query("INSERT INTO orden SET ?", newOder, (err1, res1) => {
     if (err1) {
       console.log("error: ", err1);
       result(err1, null);
       return;
     }
-
+    result(null, {idOrden: res1.insertId,  ...newOder});
     console.log("created order detail: ", {
       idOrden: res1.insertId,
       ...newOder
     });
-
-      sql.query("INSERT INTO detalleOrden SET idOrden=?", 
-        res1.insertId, 
-          (err2, res2) => {
-          if (err2) {
-            console.log("error: ", err2);
-          result(err2, null);
-          return;
-          }
-          console.log("created order detail: ", {
-            idDetalleOrden: res2.insertId
-      });
-      
-      sql.query("INSERT INTO _DetalleOrdenToProducto SET idDetalleOrden=?", res2.insertId, (err3, res3) => {
-        if (err3) {
-          console.log("error: ", err3);
-          result(err3, null);
-          return;
-        }
-    
-        console.log("created order detail: ", {
-          idOrdenProducto: res3.insertId
-        });
-      });
-
-      sql.query("UPDATE _DetalleOrdenToProducto SET idProducto=? WHERE idDetalleOrden = ?",[products.id, res2.insertId], (err1, res1) => {
-        if (err1) {
-          console.log("error: ", err1);
-          // result(err1, null);
-          return;
-        }
-    
-        result(null, {idOrden: res1.insertId,  ...newOder, idProduct: products.id});
-      });
-      sql.query("UPDATE detalleOrden SET cantidadProducto=?, costoTotalProducto=?, fechaCreacion=? WHERE idDetalleOrden = ?",[products.cantidadProducto, products.costoTotalProducto, products.fechaCreacion, res2.insertId], (err1, res1) => {
-        if (err1) {
-          console.log("error: ", err1);
-          return;
-        }
-    
-        result(null, {idOrden: res1.insertId,  ...newOder, idProduct: products.id});
-      });
-   
-    });
   })
 };
 
+Order.createDetailedOrder = (products, result) => {
+    sql.query("INSERT INTO detalleOrden(idOrden) SELECT MAX(idOrden) FROM orden", 
+      (err2, res2) => {
+  if (err2) {
+    console.log("error: ", err2);
+  result(err2, null);
+  return;
+  }
+  console.log("created order detail: ", {
+    idDetalleOrden: res2.insertId
+});
 
-Order.findById = (idOrden, result) => {
+sql.query("INSERT INTO _DetalleOrdenToProducto SET idDetalleOrden=?", res2.insertId, (err3, res3) => {
+if (err3) {
+  console.log("error: ", err3);
+  result(err3, null);
+  return;
+}
+
+console.log("created order detail: ", {
+  idOrdenProducto: res3.insertId
+});
+});
+
+sql.query("UPDATE _DetalleOrdenToProducto SET idProducto=? WHERE idDetalleOrden = ?",[products.id, res2.insertId], (err4, res4) => {
+if (err4) {
+  console.log("error: ", err4);
+  // result(err1, null);
+  return;
+}
+
+result(null, {idOrden: res4.insertId, idProduct: products.id});
+});
+sql.query("UPDATE detalleOrden SET cantidadProducto=?, costoTotalProducto=?, fechaCreacion=? WHERE idDetalleOrden = ?",[products.cantidadProducto, products.costoTotalProducto, products.fechaCreacion, res2.insertId], (err5, res5) => {
+if (err5) {
+  console.log("error: ", err5);
+  return;
+}
+
+result(null, {idOrden: res5.insertId, idProduct: products.id});
+});
+
+});
+};
+
+Order.findByIdDetailed = (idOrden, result) => {
   sql.query(
-    `SELECT * FROM detalleOrden WHERE idDetalleOrden = ${idDetalleOrden}`,
+    `SELECT idOrden, idDetalleOrden, fechaCreacion, costoTotal, estadoOrden, usuarioCreacion, fechaModificacion FROM orden WHERE idOrden = ${idOrden}`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
         return;
       }
-
-      if (res.length) {
-        console.log("found detalle de Orden: ", res[0]);
+      console.log("Detalle de Orden: ", res[0]);
+      
+        // console.log("found detalle de Orden: ", res[0]);
         result(null, res[0]);
-        return;
-      }
 
-      result({ kind: "not_found" }, null);
+        sql.query(
+          `SELECT productos FROM orden WHERE idOrden = ${idOrden}`,
+          (err, res) => {
+            if (err) {
+              console.log("error: ", err);
+              result(err, null);
+              return;
+            }
+            console.log("Detalle de Orden: ", res[0]);
+            
+              // console.log("found detalle de Orden: ", res[0]);
+              result(null, res[0]);
+      
+      
+          }
+        );
     }
   );
 };
