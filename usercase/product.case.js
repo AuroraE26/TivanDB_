@@ -140,8 +140,14 @@ Product.favorite = (id, producto, result) => {
 };
 
 Product.pieces = (id, producto, result) => {
+  let cantidad = null;
+  if(producto === undefined){
+    cantidad = producto.cantidad;
+  }else{
+    cantidad = producto;
+  }
   sql.query(
-    `UPDATE productos SET cantidad = ${producto.cantidad} WHERE idProducto = ${id}`,
+    `UPDATE productos SET cantidad = ${cantidad} WHERE idProducto = ${id}`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -157,6 +163,27 @@ Product.pieces = (id, producto, result) => {
 
       console.log("Se actualizo el producto: ", { id: id, ...producto });
       result(null, { id: id, ...producto });
+    }
+  );
+};
+
+Product.findByIdSuply = (idProducto, result) => {
+  sql.query(
+    `SELECT * FROM productos WHERE idProducto = ${idProducto}`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        result(null, res[0].cantidad);
+        return;
+      }
+
+      // not found product with the id
+      result({ kind: "not_found" }, null);
     }
   );
 };

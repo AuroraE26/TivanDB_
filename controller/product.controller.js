@@ -182,3 +182,47 @@ exports.uploadImage = async (req, res) => {
     });
   };
 
+
+  exports.suply = (req,res)=>{
+    const productos = req.body.products;
+    let dataTotal = [];
+    for(let producto of productos){
+      Product.findByIdSuply(producto.idProducto, (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              message: `No se pudo obtener el producto con el id:  ${req.params.id}.`,
+            });
+          } else {
+            res.status(500).send({
+              message: "No se pudo obtener el producto con el id: " + req.params.id,
+            });
+          }
+        } else {
+          let newCantidad = producto.piezas+data
+          Product.pieces(producto.idProducto,newCantidad,(err, data) => {
+            if (err) {
+              if (err.kind === "not_found") {
+                res.status(404).send({
+                  message: `Not found Product.`,
+                });
+              } else {
+                res.status(500).send({
+                  message: "Error delete Products.",
+                });
+              }
+            } else {
+              dataTotal.push({...data,cantidad: newCantidad})
+              
+            }
+          });
+        }
+      });
+      
+    }
+    res.status(200).send({
+      status: "success",
+      message: "products updated successfully",
+      data :dataTotal
+    });
+  }
