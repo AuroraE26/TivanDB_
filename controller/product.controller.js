@@ -174,6 +174,7 @@ exports.uploadImage = async (req, res) => {
     res.send({
       status: "success",
       message: "File uploaded successfully",
+      url: req.file.location,
       data: req.file,
     });
   };
