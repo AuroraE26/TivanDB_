@@ -41,36 +41,44 @@ exports.createDetailedOrder = (req, res) => {
     products: req.body.products
   });
 
-    for (let i = 0; i < req.body.products.length; i++) {
-    // console.log(req.body.products[i])
-    Order.createDetail(order,req.body.products[i], (err, data) => {
+  Order.createDetail(order, (err, data) => {
+    console.log(data);
+    if (err)
+    res.status(500).send({
+        code: 500,
+        message: err.message || "Error al dar de alta la orden.",
+      });
+     
+  }); 
+  var newData={order};
+  for (let i = 0; i < req.body.products.length; i++) {
+    Order.createDetailedOrder(req.body.products[i], (err, data2) => {
       if (err)
       res.status(500).send({
           code: 500,
           message: err.message || "Error al dar de alta la orden.",
         });
-      else if(i>=req.body.products.length-1){
-           res.send(data);
-      }
+        // newData.push(data2);
     }); 
   }
+  res.send(newData);
 };
 
-// exports.findOneDetailed = (req, res) => {
-//   Order.findByIdDetailed(req.params.id, (err, data) => {
-//         if (err) {
-//           if (err.kind === "not_found") {
-//             res.status(404).send({
-//               message: `No se pudo obtener la orden con el id:  ${req.params.id}.`
-//             });
-//           } else {
-//             res.status(500).send({
-//               message: "No se pudo obtener la orden con el id: " + req.params.id
-//             });
-//           }
-//         } else res.send(data);
-//       });
-// };
+exports.findOneDetailed = (req, res) => {
+  Order.findByIdDetailed(req.params.id, (err, data) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            res.status(404).send({
+              message: `No se pudo obtener la orden con el id:  ${req.params.id}.`
+            });
+          } else {
+            res.status(500).send({
+              message: "No se pudo obtener la orden con el id: " + req.params.id
+            });
+          }
+        } else res.send(data);
+      });
+};
 
 exports.findAll = (req,res) => {
   Order.getAll ((err, data) => {
