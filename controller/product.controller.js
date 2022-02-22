@@ -7,6 +7,8 @@ exports.create = (req, res) => {
     });
   }
 
+  console.log(req.body)
+
   const product = new Product({
     comun: req.body.comun,
     clave: req.body.clave,
@@ -15,6 +17,7 @@ exports.create = (req, res) => {
     cantidadMinima: req.body.cantidadMinima,
     descripcion: req.body.descripcion,
     codigoBarras: req.body.codigoBarras,
+    image:req.body.image,
     favorito: req.body.favorito,
     eliminar: req.body.eliminar,
     userCreacion: req.body.userCreacion,
