@@ -10,9 +10,7 @@ var router = require("express").Router();
     router.patch("/:id/favorito",products.favorite);
     router.patch("/:id/piece",products.pieces);
 
-  
-    
     router.post("/uploadImage",upload.single("image"), products.uploadImage);
-    // router.suply("/suply",products.suply)
+    router.post("/suply",products.suply)
 
   module.exports =router;

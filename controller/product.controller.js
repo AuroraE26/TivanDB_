@@ -182,3 +182,18 @@ exports.uploadImage = async (req, res) => {
     });
   };
 
+  exports.suply = async (req,res)=>{
+    const products = req.body.products;
+    const data = []
+    for(let producto of products){
+      const productQuantity = await Product.findProductSupplyById(producto.idProducto)
+      let newAmount =  productQuantity + producto.piezas
+      const result = await Product.updateProductQuantity(producto.idProducto,newAmount)
+      data.push(result)
+    }
+    res.status(200).send({
+      status: "success",
+      message: "products updated successfully",
+      products :data
+    });
+  }
