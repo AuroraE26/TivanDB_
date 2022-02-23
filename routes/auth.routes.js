@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { check } = require("express-validator");
 const { login, register } = require("../controller/auth.controller.js");
 
 router.get("/", (req, res) => {
@@ -28,6 +29,10 @@ router.get("/", (req, res) => {
   });
 });
 router.post("/login", login);
-router.post("/register", register);
+router.post(
+  "/register",
+  check("email", "No mailing structure").isEmail(),
+  register
+);
 
 module.exports = router;
