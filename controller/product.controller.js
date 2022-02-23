@@ -1,8 +1,4 @@
 const Product = require("../usercase/product.case");
-const fs = require("fs");
-const util = require("util");
-const unlinkFile = util.promisify(fs.unlink);
-const { uploadFile } = require("../lib/s3");
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -10,6 +6,8 @@ exports.create = (req, res) => {
       message: "No puede estar vacio!",
     });
   }
+
+  console.log(req.body);
 
   const product = new Product({
     comun: req.body.comun,
@@ -19,9 +17,10 @@ exports.create = (req, res) => {
     cantidadMinima: req.body.cantidadMinima,
     descripcion: req.body.descripcion,
     codigoBarras: req.body.codigoBarras,
+    image: req.body.image,
     favorito: req.body.favorito,
     eliminar: req.body.eliminar,
-    userCreacion: req.body.userCreacion,
+    userCreacion: req.user.email,
     fechaCreacion: req.body.fe_creacion,
     fechaModificacion: req.body.fechaModificacion,
   });
@@ -107,7 +106,7 @@ exports.logicDelete = (req, res) => {
         });
       } else {
         res.status(500).send({
-          message: "Error delete Products" ,
+          message: "Error delete Products",
         });
       }
     } else res.send(data);
@@ -163,21 +162,43 @@ exports.pieces = (req, res) => {
 };
 
 exports.uploadImage = async (req, res) => {
-    console.log(req.file);
-  
-    // uploading to AWS S3
-    const result = await uploadFile(req.file);
-    console.log("S3 response", result);
-  
-    // You may apply filter, resize image before sending to client
-  
-    // Deleting from local if uploaded in S3 bucket
-    await unlinkFile(req.file.path);
-  
-    res.send({
-      status: "success",
-      message: "File uploaded successfully",
-      url:result.Location,
-      data: req.file,
-    });
-  };
+  // console.log('mando',req.file);
+  // console.log('respuesta',res);
+
+  // uploading to AWS S3
+  // const result = await uploadFile(req.file);
+  // console.log("S3 response", req.file);
+
+  // You may apply filter, resize image before sending to client
+
+  // Deleting from local if uploaded in S3 bucket
+  // await unlinkFile(req.file.path);
+
+  res.send({
+    status: "success",
+    message: "File uploaded successfully",
+    url: req.file.location,
+    data: req.file,
+  });
+};
+
+exports.suply = async (req, res) => {
+  const products = req.body.products;
+  const data = [];
+  for (let producto of products) {
+    const productQuantity = await Product.findProductSupplyById(
+      producto.idProducto
+    );
+    let newAmount = productQuantity + producto.piezas;
+    const result = await Product.updateProductQuantity(
+      producto.idProducto,
+      newAmount
+    );
+    data.push(result);
+  }
+  res.status(200).send({
+    status: "success",
+    message: "products updated successfully",
+    products: data,
+  });
+};

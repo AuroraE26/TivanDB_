@@ -3,9 +3,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 require("dotenv").config();
-const productRoutes = require("./routes/product.routes"); 
-const salesRoutes = require("./routes/order.routes"); 
-const detailsRoutes = require("./routes/details.routes"); 
+const authRouter = require("./routes/auth.routes");
+const productRoutes = require("./routes/product.routes");
+const salesRoutes = require("./routes/order.routes");
+const detailsRoutes = require("./routes/details.routes");
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(cors());
 app.use(express.json());
 
 //routes
+
+app.use("/api/", authRouter);
 app.use("/api/productos", productRoutes);
 app.use("/api/order", salesRoutes);
 app.use("/api/details", detailsRoutes);

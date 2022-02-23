@@ -55,11 +55,12 @@ Product.getAll = (result) => {
 
 Product.updateById = (idProducto, product, result) => {
   sql.query(
-    "UPDATE productos SET comun = ?, clave = ?, cantidad = ?, precio = ?, cantidadMinima = ?, descripcion = ?, codigoBarras = ?, favorito = ?, eliminar = ?, userCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idProducto = ?",
+    "UPDATE productos SET comun = ?, clave = ?, cantidad = ?, image = ?, precio = ?, cantidadMinima = ?, descripcion = ?, codigoBarras = ?, favorito = ?, eliminar = ?, userCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idProducto = ?",
     [
       product.comun,
       product.clave,
       product.cantidad,
+      product.image,
       product.precio,
       product.cantidadMinima,
       product.descripcion,
@@ -140,8 +141,14 @@ Product.favorite = (id, producto, result) => {
 };
 
 Product.pieces = (id, producto, result) => {
+  let cantidad = null;
+  if(producto === undefined){
+    cantidad = producto.cantidad;
+  }else{
+    cantidad = producto;
+  }
   sql.query(
-    `UPDATE productos SET cantidad = ${producto.cantidad} WHERE idProducto = ${id}`,
+    `UPDATE productos SET cantidad = ${cantidad} WHERE idProducto = ${id}`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -159,6 +166,41 @@ Product.pieces = (id, producto, result) => {
       result(null, { id: id, ...producto });
     }
   );
+};
+
+Product.updateProductQuantity  = (idProduct, cantidad) => {
+  return new Promise((resolve,reject)=>{
+    sql.query(
+      `UPDATE productos SET cantidad = ${cantidad} WHERE idProducto = ${idProduct}`,
+      (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        if (res.affectedRows == 0) {
+          return reject(new Error("Could not update"));
+        }
+        return resolve({ idProduct: idProduct, cantidad: cantidad});
+      }
+    );
+  })
+
+};
+
+Product.findProductSupplyById = (idProducto) => {
+  return new Promise((resolve,reject)=>{
+    sql.query(
+      `SELECT * FROM productos WHERE idProducto = ${idProducto}`,
+      (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        if (res.length) {
+          return resolve(res[0].cantidad);
+        }
+        return reject(new Error("Not found"));
+      }
+    );
+  })
 };
 
 module.exports = Product;

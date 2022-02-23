@@ -6,6 +6,7 @@ const Product = function (product) {
   this.cantidadMinima = product.cantidadMinima;
   this.descripcion = product.descripcion;
   this.codigoBarras = product.codigoBarras;
+  this.image = product.image;
   this.favorito = product.favorito;
   this.eliminar = product.eliminar;
   this.userCreacion = product.userCreacion;
