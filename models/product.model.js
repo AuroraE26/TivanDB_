@@ -12,6 +12,7 @@ const Product = function (product) {
   this.userCreacion = product.userCreacion;
   this.fechaCreacion = product.fechaCreacion;
   this.fechaModificacion = product.fechaModificacion;
+  this.metodoPago = product.metodoPago;
 };
 
 module.exports = Product;

@@ -23,6 +23,7 @@ exports.create = (req, res) => {
     userCreacion: req.user.email,
     fechaCreacion: req.body.fe_creacion,
     fechaModificacion: req.body.fechaModificacion,
+    metodoPago: req.body.metodoPago,
   });
 
   Product.create(product, (err, data) => {
