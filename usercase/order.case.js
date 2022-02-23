@@ -12,8 +12,6 @@ Order.create = (newOrder, result) => {
     }
     console.log("Se creo orden: ", { idOrden: res1.insertId, ...newOrder });
     result(null, { idOrden: res1.insertId, ...newOrder });
-    
-    // return res.insertId;
   });
   
 };
@@ -120,8 +118,8 @@ Order.findByIdProductDet = (idDetalleOrden, result) => {
                       return;
                     }
                     result(null, {Producto: res3});
-          }
-        );
+        }
+      );
     }
   );
 };
