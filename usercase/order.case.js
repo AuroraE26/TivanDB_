@@ -95,18 +95,30 @@ Order.findByIdProductDet = (idDetalleOrden, result) => {
                 return;
               }
               sql.query(
-                "SELECT comun, clave, descripcion, codigoBarras FROM productos WHERE idProducto = ?", res2[0].idProducto,
+                "SELECT comun FROM productos WHERE idProducto = ?", res2[0].idProducto,
                   (err3, res3) => {
                     if (err3) {
                       console.log("error: ", err3);
                       result(err3, null);
                       return;
                     }
-                    result(null, {Producto: res3});
-          }
-        );
-    }
-  );
+                    console.log(res2)
+                    // result(null, {Producto: res3});
+
+                    sql.query(
+                      "SELECT cantidadProducto, costoTotalProducto FROM detalleOrden WHERE idDetalleOrden = ?", idDetalleOrden.idDetalleOrden,
+                        (err4, res4) => {
+                          if (err4) {
+                            console.log("error: ", err4);
+                            result(err4, null);
+                            return;
+                          }
+                          result(null,  {Cantidad:res4[0].cantidadProducto,Costo: res4[0].costoTotalProducto, Nombre: res3[0].comun});
+                  });
+          });
+
+          
+    });
 };
 
 

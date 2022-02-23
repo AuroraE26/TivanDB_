@@ -67,6 +67,7 @@ exports.createDetailedOrder =  async (req, res) => {
     data2.push(result);
   }
 };
+
 exports.findOneDetailed = (req, res) => {
   Order.findByIdDetailed(req.params.id, (err, data) => {
     if (err) {
@@ -96,10 +97,11 @@ exports.findOneDetailed = (req, res) => {
             });
           }
         }
-        newData.push(data2.Producto[0]);
+        newData.push(data2);
+        // data2.Producto[0]
         //En el último elemento se realiza un send para mandar todos los datos.
         if (i === data.idOrden.length - 1) {
-          res.send({ Orden: data.Orden, Producto: newData });
+          res.send({ Orden: data.Orden, Producto: newData});
         }
       });
     }
