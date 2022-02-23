@@ -33,6 +33,17 @@ const encryptPassword = async (password) => {
 exports.register = async (req, res) => {
   const { email, password } = req.body;
 
+  // check if the mail exists
+  const mailExists = await Authentication.findUserByEmail(email).catch((err) =>
+    console.error(err)
+  );
+
+  if (mailExists) {
+    return res.status(400).json({
+      message: "This email is already registered",
+    });
+  }
+
   const dataEncrypted = await encryptPassword(password);
   const userCreated = await Authentication.createUser(email, dataEncrypted);
 
