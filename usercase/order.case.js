@@ -10,12 +10,8 @@ Order.create = (newOrder, result) => {
       result(err1, null);
       return;
     }
-    console.log("Se creo orden: ", { idOrden: res1.insertId, ...newOrder });
     result(null, { idOrden: res1.insertId, ...newOrder });
-    
-    // return res.insertId;
   });
-  
 };
 
 
@@ -27,10 +23,6 @@ Order.createDetail = (newOder, result) => {
       return;
     }
     result(null, {idOrden: res1.insertId,  ...newOder});
-    console.log("created order detail: ", {
-      idOrden: res1.insertId,
-      ...newOder
-    });
   })
 };
 
@@ -42,20 +34,12 @@ Order.createDetailedOrder = (products, result) => {
           result(err2, null);
         return;
       }
-    console.log("created order detail: ", {
-      idDetalleOrden: res2.insertId
-  });
-
     sql.query("INSERT INTO _DetalleOrdenToProducto SET idDetalleOrden=?", res2.insertId, (err3, res3) => {
       if (err3) {
       console.log("error: ", err3);
       result(err3, null);
         return;
     }
-
-  console.log("created order detail: ", {
-    idOrdenProducto: res3.insertId
-    });
   });
 
     sql.query("UPDATE _DetalleOrdenToProducto SET idProducto=? WHERE idDetalleOrden = ?",[products.id, res2.insertId], (err4, res4) => {
@@ -78,7 +62,6 @@ Order.createDetailedOrder = (products, result) => {
   };
 
 
-
 Order.findByIdDetailed = (idOrden, result) => {
   sql.query(
     `SELECT idOrden, fechaCreacion, costoTotal, estadoOrden, usuarioCreacion, fechaModificacion FROM orden WHERE idOrden = ${idOrden}`,
@@ -98,8 +81,7 @@ Order.findByIdDetailed = (idOrden, result) => {
               }
 
               result(null, {Orden: res, idOrden:res1});
-            });
-            
+            }); 
   });
 };
 
@@ -108,7 +90,8 @@ Order.findByIdProductDet = (idDetalleOrden, result) => {
           "SELECT idProducto FROM _DetalleOrdenToProducto WHERE idDetalleOrden = ?", idDetalleOrden.idDetalleOrden,
             (err2, res2) => {
               if (err2) {
-
+                console.log("error: ", err2);
+                result(err2, null);
                 return;
               }
               sql.query(
@@ -116,7 +99,7 @@ Order.findByIdProductDet = (idDetalleOrden, result) => {
                   (err3, res3) => {
                     if (err3) {
                       console.log("error: ", err3);
-
+                      result(err3, null);
                       return;
                     }
                     result(null, {Producto: res3});

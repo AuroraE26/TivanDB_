@@ -27,7 +27,7 @@ exports.create = (req, res) => {
   });
 };
 
-exports.createDetailedOrder = (req, res) => {
+exports.createDetailedOrder =  async (req, res) => {
   const order = new Order({
     estadoOrden: req.body.estadoOrden,
     costoTotal: req.body.costoTotal,
@@ -39,14 +39,14 @@ exports.createDetailedOrder = (req, res) => {
   const products = new OrderDetail({
     products: req.body.products,
   });
-
+  const data2 = [];
   Order.createDetail(order, (err, data) => {
-    console.log(data);
     if (err)
       res.status(500).send({
         code: 500,
         message: err.message || "Error al dar de alta la orden.",
       });
+      res.send(data);
   });
   for (let i = 0; i < req.body.products.length; i++) {
     Order.createDetailedOrder(req.body.products[i], (err, data2) => {
@@ -56,10 +56,17 @@ exports.createDetailedOrder = (req, res) => {
           message: err.message || "Error al dar de alta la orden.",
         });
     });
+    const productQuantity = await Product.findProductSupplyById(
+      req.body.products[i].id
+    );
+    let newAmount = productQuantity - req.body.products[i].cantidadProducto;
+    const result = await Product.updateProductQuantity(
+      req.body.products[i].id,
+      newAmount
+    );
+    data2.push(result);
   }
-  res.send(newData);
 };
-
 exports.findOneDetailed = (req, res) => {
   Order.findByIdDetailed(req.params.id, (err, data) => {
     if (err) {
