@@ -167,25 +167,39 @@ Product.pieces = (id, producto, result) => {
   );
 };
 
-Product.findByIdSuply = (idProducto, result) => {
-  sql.query(
-    `SELECT * FROM productos WHERE idProducto = ${idProducto}`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
+Product.updateProductQuantity  = (idProduct, cantidad) => {
+  return new Promise((resolve,reject)=>{
+    sql.query(
+      `UPDATE productos SET cantidad = ${cantidad} WHERE idProducto = ${idProduct}`,
+      (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        if (res.affectedRows == 0) {
+          return reject(new Error("Could not update"));
+        }
+        return resolve({ idProduct: idProduct, cantidad: cantidad});
       }
+    );
+  })
 
-      if (res.length) {
-        result(null, res[0].cantidad);
-        return;
+};
+
+Product.findProductSupplyById = (idProducto) => {
+  return new Promise((resolve,reject)=>{
+    sql.query(
+      `SELECT * FROM productos WHERE idProducto = ${idProducto}`,
+      (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+        if (res.length) {
+          return resolve(res[0].cantidad);
+        }
+        return reject(new Error("Not found"));
       }
-
-      // not found product with the id
-      result({ kind: "not_found" }, null);
-    }
-  );
+    );
+  })
 };
 
 module.exports = Product;
