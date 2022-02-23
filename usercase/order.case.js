@@ -1,4 +1,5 @@
 const res = require("express/lib/response");
+const { reset } = require("nodemon");
 const sql = require("../database/config");
 const Order = require("../models/order.model");
 
@@ -36,81 +37,99 @@ Order.createDetail = (newOder, result) => {
 Order.createDetailedOrder = (products, result) => {
     sql.query("INSERT INTO detalleOrden(idOrden) SELECT MAX(idOrden) FROM orden", 
       (err2, res2) => {
-  if (err2) {
-    console.log("error: ", err2);
-  result(err2, null);
-  return;
-  }
+        if (err2) {
+          console.log("error: ", err2);
+          result(err2, null);
+        return;
+      }
+    console.log("created order detail: ", {
+      idDetalleOrden: res2.insertId
+  });
+
+    sql.query("INSERT INTO _DetalleOrdenToProducto SET idDetalleOrden=?", res2.insertId, (err3, res3) => {
+      if (err3) {
+      console.log("error: ", err3);
+      result(err3, null);
+        return;
+    }
+
   console.log("created order detail: ", {
-    idDetalleOrden: res2.insertId
-});
+    idOrdenProducto: res3.insertId
+    });
+  });
 
-sql.query("INSERT INTO _DetalleOrdenToProducto SET idDetalleOrden=?", res2.insertId, (err3, res3) => {
-if (err3) {
-  console.log("error: ", err3);
-  result(err3, null);
-  return;
-}
+    sql.query("UPDATE _DetalleOrdenToProducto SET idProducto=? WHERE idDetalleOrden = ?",[products.id, res2.insertId], (err4, res4) => {
+      if (err4) {
+        console.log("error: ", err4);
+      // result(err1, null);
+      return;
+  }
 
-console.log("created order detail: ", {
-  idOrdenProducto: res3.insertId
-});
-});
+    result(null, {idOrden: res4.insertId, idProduct: products.id});
+    });
+    sql.query("UPDATE detalleOrden SET cantidadProducto=?, costoTotalProducto=?, fechaCreacion=? WHERE idDetalleOrden = ?",[products.cantidadProducto, products.costoTotalProducto, products.fechaCreacion, res2.insertId], (err5, res5) => {
+      if (err5) {
+        console.log("error: ", err5);
+      return;
+    }
+    result(null, {idOrden: res5.insertId, idProduct: products.id});
+      });
+    });
+  };
 
-sql.query("UPDATE _DetalleOrdenToProducto SET idProducto=? WHERE idDetalleOrden = ?",[products.id, res2.insertId], (err4, res4) => {
-if (err4) {
-  console.log("error: ", err4);
-  // result(err1, null);
-  return;
-}
 
-result(null, {idOrden: res4.insertId, idProduct: products.id});
-});
-sql.query("UPDATE detalleOrden SET cantidadProducto=?, costoTotalProducto=?, fechaCreacion=? WHERE idDetalleOrden = ?",[products.cantidadProducto, products.costoTotalProducto, products.fechaCreacion, res2.insertId], (err5, res5) => {
-if (err5) {
-  console.log("error: ", err5);
-  return;
-}
-
-result(null, {idOrden: res5.insertId, idProduct: products.id});
-});
-
-});
-};
 
 Order.findByIdDetailed = (idOrden, result) => {
   sql.query(
-    `SELECT idOrden, idDetalleOrden, fechaCreacion, costoTotal, estadoOrden, usuarioCreacion, fechaModificacion FROM orden WHERE idOrden = ${idOrden}`,
+    `SELECT idOrden, fechaCreacion, costoTotal, estadoOrden, usuarioCreacion, fechaModificacion FROM orden WHERE idOrden = ${idOrden}`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
-        result(err, null);
         return;
       }
-      console.log("Detalle de Orden: ", res[0]);
-      
-        // console.log("found detalle de Orden: ", res[0]);
-        result(null, res[0]);
-
+      console.log("Detalle de Orden: ", res);
         sql.query(
-          `SELECT productos FROM orden WHERE idOrden = ${idOrden}`,
-          (err, res) => {
-            if (err) {
-              console.log("error: ", err);
-              result(err, null);
-              return;
-            }
-            console.log("Detalle de Orden: ", res[0]);
+          "SELECT idDetalleOrden FROM detalleOrden WHERE idOrden = ?", idOrden,
+            (err1, res1) => {
+              if (err1) {
+                console.log("error: ", err1);
+                // 
+                return;
+              }
+
+              result(null, {Orden: res, idOrden:res1});
+            });
             
-              // console.log("found detalle de Orden: ", res[0]);
-              result(null, res[0]);
-      
-      
+  });
+};
+
+Order.findByIdProductDet = (idDetalleOrden, result) => {
+        sql.query(
+          "SELECT idProducto FROM _DetalleOrdenToProducto WHERE idDetalleOrden = ?", idDetalleOrden.idDetalleOrden,
+            (err2, res2) => {
+              if (err2) {
+
+                return;
+              }
+              sql.query(
+                "SELECT comun, clave, descripcion, codigoBarras FROM productos WHERE idProducto = ?", res2[0].idProducto,
+                  (err3, res3) => {
+                    if (err3) {
+                      console.log("error: ", err3);
+
+                      return;
+                    }
+                    result(null, {Producto: res3});
           }
         );
     }
   );
 };
+
+
+
+
+
 
 Order.getAll = (result) => {
   let query = "SELECT * FROM orden";
