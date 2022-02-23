@@ -1,4 +1,4 @@
-const details = require("../controller/detalleOrden.controller.js");
+const details = require("../controller/orderDetail.controller");
 var router = require("express").Router();
 
 router.post("/", details.create);
