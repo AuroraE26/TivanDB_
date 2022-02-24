@@ -20,8 +20,8 @@ exports.create = (req, res) => {
     image: req.body.image,
     favorito: req.body.favorito,
     eliminar: req.body.eliminar,
-    userCreacion: req.user.email,
-    fechaCreacion: req.body.fe_creacion,
+    userCreacion: req.body.userCreacion,
+    fechaCreacion: req.body.fechaCreacion,
     fechaModificacion: req.body.fechaModificacion,
   });
 
