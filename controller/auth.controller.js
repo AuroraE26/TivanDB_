@@ -31,10 +31,25 @@ const encryptPassword = async (password) => {
 };
 
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, nombre } = req.body;
+
+  // check if the mail exists
+  const mailExists = await Authentication.findUserByEmail(email).catch((err) =>
+    console.error(err)
+  );
+
+  if (mailExists) {
+    return res.status(400).json({
+      message: "This email is already registered",
+    });
+  }
 
   const dataEncrypted = await encryptPassword(password);
-  const userCreated = await Authentication.createUser(email, dataEncrypted);
+  const userCreated = await Authentication.createUser(
+    email,
+    dataEncrypted,
+    nombre
+  );
 
   if (userCreated) {
     res.status(201).json({
