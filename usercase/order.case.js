@@ -102,6 +102,7 @@ Order.findByIdProductDet = (idDetalleOrden, result) => {
                       result(err3, null);
                       return;
                     }
+
                     console.log(res2)
                     // result(null, {Producto: res3});
 
