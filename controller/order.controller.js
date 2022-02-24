@@ -15,6 +15,7 @@ exports.create = (req, res) => {
     usuarioCreacion: req.body.usuarioCreacion,
     fechaCreacion: req.body.fechaCreacion,
     fechaModificacion: req.body.fechaModificacion,
+    metodoPago: req.body.metodoPago
   });
 
   Order.create(order, (err, data) => {
@@ -27,26 +28,27 @@ exports.create = (req, res) => {
   });
 };
 
-exports.createDetailedOrder = (req, res) => {
+exports.createDetailedOrder =  async (req, res) => {
   const order = new Order({
     estadoOrden: req.body.estadoOrden,
     costoTotal: req.body.costoTotal,
     usuarioCreacion: req.body.usuarioCreacion,
     fechaCreacion: req.body.fechaCreacion,
     fechaModificacion: req.body.fechaModificacion,
+    metodoPago: req.body.metodoPago
   });
 
   const products = new OrderDetail({
     products: req.body.products,
   });
-
+  const data2 = [];
   Order.createDetail(order, (err, data) => {
-    console.log(data);
     if (err)
       res.status(500).send({
         code: 500,
         message: err.message || "Error al dar de alta la orden.",
       });
+      res.send(data);
   });
   for (let i = 0; i < req.body.products.length; i++) {
     Order.createDetailedOrder(req.body.products[i], (err, data2) => {
@@ -56,8 +58,16 @@ exports.createDetailedOrder = (req, res) => {
           message: err.message || "Error al dar de alta la orden.",
         });
     });
+    const productQuantity = await Product.findProductSupplyById(
+      req.body.products[i].id
+    );
+    let newAmount = productQuantity - req.body.products[i].cantidadProducto;
+    const result = await Product.updateProductQuantity(
+      req.body.products[i].id,
+      newAmount
+    );
+    data2.push(result);
   }
-  res.send(newData);
 };
 
 exports.findOneDetailed = (req, res) => {
@@ -89,10 +99,11 @@ exports.findOneDetailed = (req, res) => {
             });
           }
         }
-        newData.push(data2.Producto[0]);
+        newData.push(data2);
+        // data2.Producto[0]
         //En el último elemento se realiza un send para mandar todos los datos.
         if (i === data.idOrden.length - 1) {
-          res.send({ Orden: data.Orden, Producto: newData });
+          res.send({ Orden: data.Orden, Producto: newData});
         }
       });
     }

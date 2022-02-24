@@ -3,7 +3,7 @@ const upload = require("../lib/s3");
 const router = require("express").Router();
 const verifyToken = require("../middleware/verifyToken");
 
-router.post("/", verifyToken, products.create);
+router.post("/", products.create);
 router.get("/", products.findAll);
 router.get("/:id", products.findOne);
 router.put("/:id", products.update);
