@@ -35,6 +35,7 @@ router.post(
   [
     check("email", "No mailing structure").isEmail(),
     check("password", "The password must not be empty").not().isEmpty(),
+    check("nombre", "The name must not be empty").not().isEmpty(),
     check("password", "The password must be at least 6 digits long").isLength({
       min: 6,
     }),
