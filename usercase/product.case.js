@@ -55,7 +55,7 @@ Product.getAll = (result) => {
 
 Product.updateById = (idProducto, product, result) => {
   sql.query(
-    "UPDATE productos SET comun = ?, clave = ?, cantidad = ?, image = ?, precio = ?, cantidadMinima = ?, descripcion = ?, codigoBarras = ?, favorito = ?, eliminar = ?, userCreacion = ?, fechaCreacion = ?, fechaModificacion = ?, metodoPago=? WHERE idProducto = ?",
+    "UPDATE productos SET comun = ?, clave = ?, cantidad = ?, image = ?, precio = ?, cantidadMinima = ?, descripcion = ?, codigoBarras = ?, favorito = ?, eliminar = ?, userCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idProducto = ?",
     [
       product.comun,
       product.clave,
@@ -70,7 +70,6 @@ Product.updateById = (idProducto, product, result) => {
       product.userCreacion,
       product.fechaCreacion,
       product.fechaModificacion,
-      product.metodoPago,
       idProducto,
     ],
     (err, res) => {

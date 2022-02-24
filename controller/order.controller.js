@@ -15,6 +15,7 @@ exports.create = (req, res) => {
     usuarioCreacion: req.body.usuarioCreacion,
     fechaCreacion: req.body.fechaCreacion,
     fechaModificacion: req.body.fechaModificacion,
+    metodoPago: req.body.metodoPago
   });
 
   Order.create(order, (err, data) => {
@@ -34,6 +35,7 @@ exports.createDetailedOrder =  async (req, res) => {
     usuarioCreacion: req.body.usuarioCreacion,
     fechaCreacion: req.body.fechaCreacion,
     fechaModificacion: req.body.fechaModificacion,
+    metodoPago: req.body.metodoPago
   });
 
   const products = new OrderDetail({

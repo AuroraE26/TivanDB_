@@ -64,7 +64,7 @@ Order.createDetailedOrder = (products, result) => {
 
 Order.findByIdDetailed = (idOrden, result) => {
   sql.query(
-    `SELECT idOrden, fechaCreacion, costoTotal, estadoOrden, usuarioCreacion, fechaModificacion FROM orden WHERE idOrden = ${idOrden}`,
+    `SELECT idOrden, fechaCreacion, costoTotal, estadoOrden, usuarioCreacion, fechaModificacion, metodoPago FROM orden WHERE idOrden = ${idOrden}`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -170,8 +170,8 @@ Order.getAll = (result) => {
 
 Order.updateById = (idOrden, order, result) => {
   sql.query(
-    "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ? WHERE idOrden = ?",
-    [order.estadoOrden, order.costoTotal, order.usuarioCreacion, order.fechaCreacion, order.fechaModificacion, idOrden],
+    "UPDATE orden SET estadoOrden = ?, costoTotal = ?, usuarioCreacion = ?, fechaCreacion = ?, fechaModificacion = ?, metodoPago=? WHERE idOrden = ?",
+    [order.estadoOrden, order.costoTotal, order.usuarioCreacion, order.fechaCreacion, order.fechaModificacion, order.metodoPago, idOrden],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

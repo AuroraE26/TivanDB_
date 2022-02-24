@@ -5,6 +5,7 @@ const Order = function(order) {
   this.usuarioCreacion = order.usuarioCreacion;
   this.fechaCreacion = order.fechaCreacion;
   this.fechaModificacion = order.fechaModificacion;
+  this.metodoPago = order.metodoPago;
 };
 
 module.exports = Order;
