@@ -15,10 +15,10 @@ Authentication.findUserByEmail = (email) => {
   });
 };
 
-Authentication.createUser = (email, password) => {
+Authentication.createUser = (email, password, nombre) => {
   return new Promise((resolve, reject) => {
     sql.query(
-      `INSERT INTO usuarios SET email = "${email}", password ="${password}"`,
+      `INSERT INTO usuarios SET email = "${email}", password ="${password}",nombre="${nombre}"`,
       (err, res) => {
         if (err) {
           return reject(err);

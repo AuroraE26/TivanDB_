@@ -1,5 +1,7 @@
 const router = require("express").Router();
+const { check } = require("express-validator");
 const { login, register } = require("../controller/auth.controller.js");
+const { validateFields } = require("../middleware/validateFields.js");
 
 router.get("/", (req, res) => {
   res.json({
@@ -28,6 +30,18 @@ router.get("/", (req, res) => {
   });
 });
 router.post("/login", login);
-router.post("/register", register);
+router.post(
+  "/register",
+  [
+    check("email", "No mailing structure").isEmail(),
+    check("password", "The password must not be empty").not().isEmpty(),
+    check("nombre", "The name must not be empty").not().isEmpty(),
+    check("password", "The password must be at least 6 digits long").isLength({
+      min: 6,
+    }),
+    validateFields,
+  ],
+  register
+);
 
 module.exports = router;
